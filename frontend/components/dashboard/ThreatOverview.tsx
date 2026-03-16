@@ -10,7 +10,7 @@ interface Incident {
 
 export default function ThreatOverview() {
   const { data } = useSWR<Incident[]>(
-    "http://localhost:8000/api/incidents?limit=500",
+    "/api/incidents?limit=500",
     fetcher
   );
 

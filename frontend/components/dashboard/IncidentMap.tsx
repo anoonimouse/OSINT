@@ -22,7 +22,7 @@ const scoreColor = (score: number) => {
 
 export default function IncidentMap() {
   const { data } = useSWR<Incident[]>(
-    "http://localhost:8000/api/map",
+    "/api/map",
     fetcher
   );
 

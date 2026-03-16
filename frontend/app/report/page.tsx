@@ -19,7 +19,7 @@ interface ReportResponse {
 
 export default function ReportPage() {
   const { data, isLoading, mutate } = useSWR<ReportResponse>(
-    "http://localhost:8000/api/report/generate",
+    "/api/report/generate",
     (url: string) => postFetcher(url, {})
   );
 

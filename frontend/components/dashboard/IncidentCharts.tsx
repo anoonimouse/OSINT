@@ -18,7 +18,7 @@ interface Incident {
 
 export default function IncidentCharts() {
   const { data } = useSWR<Incident[]>(
-    "http://localhost:8000/api/incidents?limit=200",
+    "/api/incidents?limit=200",
     fetcher
   );
 

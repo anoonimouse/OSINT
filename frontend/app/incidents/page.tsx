@@ -20,7 +20,7 @@ const scoreColor = (score: number) => {
 
 export default function IncidentsPage() {
   const { data } = useSWR<Incident[]>(
-    "http://localhost:8000/api/incidents?limit=500",
+    "/api/incidents?limit=500",
     fetcher
   );
 

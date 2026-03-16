@@ -19,7 +19,7 @@ interface ReportResponse {
 
 export default function LatestBrief() {
   const { data, isLoading } = useSWR<ReportResponse>(
-    "http://localhost:8000/api/report/generate",
+    "/api/report/generate",
     (url: string) => postFetcher(url, {})
   );
 
