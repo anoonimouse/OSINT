@@ -1,5 +1,6 @@
 import ThreatOverview from "../components/dashboard/ThreatOverview";
-import IncidentMap from "../components/dashboard/IncidentMap";
+import dynamic from "next/dynamic";
+const IncidentMap = dynamic(() => import("../components/dashboard/IncidentMap"), { ssr: false });
 import IncidentCharts from "../components/dashboard/IncidentCharts";
 import LatestBrief from "../components/dashboard/LatestBrief";
 
