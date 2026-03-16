@@ -1,0 +1,36 @@
+# OSINT Threat Monitoring - root gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# Virtual envs
+.venv/
+env/
+venv/
+
+# SQLite database
+osint.db
+
+# Node / Next.js
+node_modules/
+npm-debug.log*
+pnpm-lock.yaml
+yarn.lock
+.next/
+.turbo/
+.vercel/
+
+# Logs
+*.log
+logs/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
