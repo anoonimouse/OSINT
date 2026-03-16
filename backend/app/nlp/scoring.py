@@ -23,10 +23,20 @@ def compute_threat_score(
     }
     score += category_weights.get(category, 1.0)
 
+    # Base entity weights
     if entities.get("location"):
+        score += 0.5
+    if len(entities.get("organizations", [])) > 0:
         score += 1.0
-    if entities.get("organization"):
-        score += 1.0
+    if len(entities.get("persons", [])) > 0:
+        score += 0.5
+
+    # Synergistic insights: High severity attacks naming specific organizations/people
+    if category in ["terrorism", "naxal_activity", "border_infiltration"]:
+        if len(entities.get("organizations", [])) > 0:
+            score += 1.5  # E.g. A terror attack where a specific group is named
+        if len(entities.get("persons", [])) > 0:
+            score += 1.0  # E.g. A naxal attack where a commander or target is named
 
     source_weights = {
         "The Hindu": 1.5,

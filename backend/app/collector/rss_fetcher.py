@@ -1,10 +1,15 @@
 from datetime import datetime
 from typing import Dict, List
+import socket
+from concurrent.futures import ThreadPoolExecutor
 
 import feedparser
 
+# Set a global timeout for feed fetching to prevent hangs
+socket.setdefaulttimeout(10)
 
 RSS_FEEDS = {
+    # ... (keeping existing RSS_FEEDS dictionary)
     # Core Indian national news
     "The Hindu - National": "https://www.thehindu.com/news/national/feeder/default.rss",
     "The Hindu - Front Page": "https://www.thehindu.com/news/feeder/default.rss",
@@ -56,20 +61,14 @@ RSS_FEEDS = {
 }
 
 
-def fetch_rss_articles() -> List[Dict]:
-    """
-    Fetch articles from configured RSS feeds.
-    Designed to be robust: even if published dates are missing/invalid,
-    it will still return entries with a sensible fallback timestamp.
-    """
-    articles: List[Dict] = []
-    for source, feed_url in RSS_FEEDS.items():
+def fetch_single_feed(source: str, feed_url: str) -> List[Dict]:
+    try:
         parsed = feedparser.parse(feed_url)
         entries = getattr(parsed, "entries", [])
         print(f"[RSS] {source}: {len(entries)} entries")
-
+        
+        feed_articles = []
         for entry in entries:
-            # Try structured time first
             published_dt = None
             published_parsed = getattr(entry, "published_parsed", None)
             if published_parsed:
@@ -81,7 +80,7 @@ def fetch_rss_articles() -> List[Dict]:
             if published_dt is None:
                 published_dt = datetime.utcnow()
 
-            articles.append(
+            feed_articles.append(
                 {
                     "title": getattr(entry, "title", "(no title)"),
                     "url": getattr(entry, "link", ""),
@@ -90,6 +89,20 @@ def fetch_rss_articles() -> List[Dict]:
                     "summary": getattr(entry, "summary", "") or "",
                 }
             )
+        return feed_articles
+    except Exception as e:
+        print(f"[RSS Error] {source}: {e}")
+        return []
+
+
+def fetch_rss_articles() -> List[Dict]:
+    articles: List[Dict] = []
+    
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = [executor.submit(fetch_single_feed, source, url) for source, url in RSS_FEEDS.items()]
+        for future in futures:
+            articles.extend(future.result())
+            
     return articles
 
 
