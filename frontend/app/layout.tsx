@@ -1,4 +1,5 @@
 import "./globals.css";
+import Topbar from "../components/layout/Topbar";
 
 export const metadata = {
   title: "OSINT Threat Monitoring",
@@ -36,7 +37,10 @@ export default function RootLayout({
             </nav>
           </aside>
           <main className="flex-1 p-4 md:p-6">
-            <div className="mx-auto w-full max-w-7xl space-y-6">{children}</div>
+            <div className="mx-auto w-full max-w-7xl space-y-4">
+              <Topbar />
+              {children}
+            </div>
           </main>
         </div>
       </body>
