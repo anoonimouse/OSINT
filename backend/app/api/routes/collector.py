@@ -19,7 +19,7 @@ def get_db():
         db.close()
 
 @router.post("/run")
-def run_collector(request: Request, db: Session = Depends(get_db)):
+async def run_collector(request: Request, db: Session = Depends(get_db)):
     data = None
     try:
         data = await request.json()
