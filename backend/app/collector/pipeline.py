@@ -47,6 +47,10 @@ def run_collection_cycle(db: Session) -> Dict[str, int]:
     for i, art in enumerate(articles):
         if (i + 1) % 10 == 0:
             print(f"[Pipeline] Processing article {i + 1}/{total_fetched}...")
+            # Incremental commit every 20 articles to ensure visibility and persistence
+            if (i + 1) % 20 == 0:
+                db.commit()
+                print(f"[Pipeline] Committed progress to database.")
 
         if db.query(Article).filter(Article.url == art["url"]).first():
             continue
