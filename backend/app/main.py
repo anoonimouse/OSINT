@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api.routes import incidents, reports, map as map_routes
+from .api.routes import incidents, reports, map as map_routes, collector
 
 
 from .db.session import SessionLocal
@@ -41,4 +41,5 @@ def health_check():
 app.include_router(incidents.router, prefix="/api/incidents", tags=["incidents"])
 app.include_router(map_routes.router, prefix="/api/map", tags=["map"])
 app.include_router(reports.router, prefix="/api/report", tags=["reports"])
+app.include_router(collector.router, prefix="/api/collector", tags=["collector"])
 
