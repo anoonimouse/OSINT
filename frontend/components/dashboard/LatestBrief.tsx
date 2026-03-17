@@ -40,7 +40,7 @@ export default function LatestBrief() {
               <ul className="space-y-1 text-[11px] text-slate-400">
                 {data.high_risk_incidents.slice(0, 3).map((inc) => (
                   <li key={inc.id}>
-                    [{inc.category}] {inc.location ?? "Unknown"} —{" "}
+                    [{inc.category}] {inc.location ?? "Unknown"} -{" "}
                     {inc.threat_score.toFixed(1)}
                   </li>
                 ))}
