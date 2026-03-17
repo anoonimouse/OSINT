@@ -53,25 +53,20 @@ export default function IncidentsPage() {
 
   return (
     <div className="space-y-4">
-      <header className="flex items-center justify-between">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-lg font-semibold">Incidents</h1>
           <p className="text-xs text-slate-400">
             Latest detected security-related incidents from open sources.
           </p>
         </div>
-        <div className="text-xs text-slate-400">
-          Showing{" "}
-          <span className="font-semibold">{filtered.length}</span> of{" "}
-          <span className="font-semibold">{incidents.length}</span>
-        </div>
       </header>
 
-      <div className="flex flex-wrap gap-3 text-xs">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-4 p-4 rounded-lg bg-slate-900/50 border border-slate-800 text-xs shadow-inner">
+        <div className="flex flex-col gap-1.5 min-w-[140px]">
           <span className="text-slate-400">Category</span>
           <select
-            className="rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100"
+            className="rounded bg-slate-900 border border-slate-700 px-2 py-1 text-slate-100"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
@@ -86,54 +81,92 @@ export default function IncidentsPage() {
             <option value="other">Other</option>
           </select>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-slate-400">Min score</span>
+        
+        <div className="flex flex-col gap-1.5 flex-1 min-w-[180px]">
+          <div className="flex justify-between items-end">
+            <span className="text-slate-400">Min score</span>
+            <span className="text-slate-200">{minScore}</span>
+          </div>
           <input
             type="range"
             min={0}
             max={10}
             step={1}
+            className="w-full accent-blue-500"
             value={minScore}
             onChange={(e) => setMinScore(Number(e.target.value))}
           />
-          <span className="w-6 text-right text-slate-200">{minScore}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-slate-400">Range</span>
-          <select
-            className="rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100"
-            value={range}
-            onChange={(e) => setRange(e.target.value)}
-          >
-            <option value="24h">Last 24h</option>
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-            <option value="all">All time</option>
-          </select>
+
+        <div className="flex flex-col gap-1.5 min-w-[120px]">
+          <span className="text-slate-400">Time range</span>
+          <div className="flex gap-1 bg-slate-900 p-1 rounded border border-slate-700">
+            {['24h', '7d', 'all'].map((r) => (
+              <button
+                key={r}
+                onClick={() => setRange(r)}
+                className={`flex-1 px-2 py-1 rounded text-[10px] transition-all ${
+                  range === r ? 'bg-slate-800 text-slate-100 font-semibold' : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="rounded-lg border border-slate-800 bg-slate-900/70 overflow-hidden">
+      {/* Mobile Card List */}
+      <div className="md:hidden space-y-3">
+        {filtered.map((inc) => (
+          <div key={inc.id} className="p-4 rounded-lg bg-slate-900/70 border border-slate-800 space-y-3">
+            <div className="flex justify-between items-start">
+              <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border border-slate-700 bg-slate-900 ${scoreColor(inc.threat_score)}`}>
+                {inc.category.replace("_", " ")}
+              </span>
+              <span className={`text-sm font-semibold ${scoreColor(inc.threat_score)}`}>
+                {inc.threat_score.toFixed(1)}
+              </span>
+            </div>
+            <div>
+              <div className="text-sm font-medium text-slate-200 line-clamp-1">
+                {inc.location ?? "Unknown location"}
+              </div>
+              <div className="text-[10px] text-slate-500 mt-1">
+                {new Date(inc.timestamp).toLocaleString()}
+              </div>
+            </div>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <div className="p-8 text-center text-slate-500 border-2 border-dashed border-slate-800 rounded-lg">
+             No incidents available yet.
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block overflow-hidden rounded-lg border border-slate-800 bg-slate-900/70">
         <div className="overflow-x-auto">
           <table className="min-w-full text-xs">
-            <thead className="bg-slate-900/80 text-slate-400 uppercase tracking-wide">
+            <thead className="bg-slate-900 text-slate-400 uppercase tracking-wide border-b border-slate-800">
               <tr>
                 <th className="px-3 py-2 text-left">Time</th>
                 <th className="px-3 py-2 text-left">Location</th>
                 <th className="px-3 py-2 text-left">Category</th>
-                <th className="px-3 py-2 text-left">Threat</th>
+                <th className="px-3 py-2 text-right">Threat</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-800">
               {filtered.map((inc) => (
                 <tr
                   key={inc.id}
-                  className="border-t border-slate-800 hover:bg-slate-800/60"
+                  className="hover:bg-slate-800/60 transition-colors"
                 >
                   <td className="px-3 py-2 whitespace-nowrap text-slate-300">
                     {new Date(inc.timestamp).toLocaleString()}
                   </td>
-                  <td className="px-3 py-2">
+                  <td className="px-3 py-2 text-slate-200">
                     {inc.location ?? (
                       <span className="text-slate-500 italic">Unknown</span>
                     )}
@@ -141,11 +174,9 @@ export default function IncidentsPage() {
                   <td className="px-3 py-2 text-slate-200">
                     {inc.category.replace("_", " ")}
                   </td>
-                  <td className="px-3 py-2">
+                  <td className="px-3 py-2 text-right">
                     <span
-                      className={`inline-flex items-center rounded-full border border-slate-700 px-2 py-0.5 text-[10px] font-semibold ${scoreColor(
-                        inc.threat_score
-                      )}`}
+                      className={`font-semibold ${scoreColor(inc.threat_score)}`}
                     >
                       {inc.threat_score.toFixed(1)}
                     </span>
@@ -158,8 +189,7 @@ export default function IncidentsPage() {
                     colSpan={4}
                     className="px-3 py-6 text-center text-slate-500"
                   >
-                    No incidents available yet. Run the collector or seed demo
-                    data.
+                    No incidents available yet.
                   </td>
                 </tr>
               )}

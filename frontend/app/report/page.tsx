@@ -24,18 +24,17 @@ export default function ReportPage() {
   );
 
   return (
-    <div className="space-y-4">
-      <header className="flex items-center justify-between">
+    <div className="space-y-6">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-lg font-semibold">Daily Intelligence Brief</h1>
           <p className="text-xs text-slate-400">
-            Automated narrative plus list of high-risk incidents in the last
-            24 hours.
+            Automated narrative plus list of high-risk incidents in the last 24 hours.
           </p>
         </div>
         <button
           onClick={() => mutate()}
-          className="inline-flex items-center rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-100 hover:bg-slate-800"
+          className="flex items-center justify-center gap-2 rounded bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-950 hover:bg-white active:scale-95 transition-all shadow-xl shadow-white/5"
         >
           Regenerate
         </button>

@@ -36,8 +36,14 @@ export default function IncidentCharts() {
       <h2 className="text-sm font-semibold mb-2">Incident Frequency</h2>
       <ResponsiveContainer width="100%" height="85%">
         <LineChart data={chartData}>
-          <XAxis dataKey="date" tick={{ fill: "#94a3b8", fontSize: 10 }} />
-          <YAxis tick={{ fill: "#94a3b8", fontSize: 10 }} />
+          <XAxis 
+            dataKey="date" 
+            tick={{ fill: "#94a3b8", fontSize: 10 }} 
+            minTickGap={40}
+          />
+          <YAxis 
+            tick={{ fill: "#94a3b8", fontSize: 10 }} 
+          />
           <Tooltip
             contentStyle={{
               backgroundColor: "#020617",
