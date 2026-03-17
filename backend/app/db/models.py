@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text
-from sqlalchemy.dialects.sqlite import JSON as JSONType
+from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from .session import Base
@@ -29,7 +28,7 @@ class Incident(Base):
     latitude = Column(Float)
     longitude = Column(Float)
     threat_score = Column(Float, index=True)
-    entities = Column(JSONType)
+    entities = Column(JSON)
     summary = Column(Text)
     timestamp = Column(DateTime, index=True)
 
@@ -41,5 +40,5 @@ class DailyReport(Base):
 
     date = Column(DateTime, primary_key=True)
     summary_text = Column(Text)
-    high_risk_incidents = Column(JSONType)
+    high_risk_incidents = Column(JSON)
 
