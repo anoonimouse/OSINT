@@ -1,15 +1,23 @@
+"use client";
+
 import "./globals.css";
 import Topbar from "../components/layout/Topbar";
-
-export const metadata = {
-  title: "OSINT Threat Monitoring",
-};
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
+  const navItems = [
+    { label: "Dashboard", href: "/" },
+    { label: "Incidents", href: "/incidents" },
+    { label: "Daily Brief", href: "/report" },
+  ];
+
   return (
     <html lang="en">
       <body className="bg-slate-950 text-slate-50">
@@ -19,21 +27,22 @@ export default function RootLayout({
               OSINT Monitor
             </div>
             <nav className="px-4 space-y-2 text-sm">
-              <a href="/" className="block px-3 py-2 rounded bg-slate-800">
-                Dashboard
-              </a>
-              <a
-                href="/incidents"
-                className="block px-3 py-2 rounded hover:bg-slate-800/80"
-              >
-                Incidents
-              </a>
-              <a
-                href="/report"
-                className="block px-3 py-2 rounded hover:bg-slate-800/80"
-              >
-                Daily Brief
-              </a>
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`block px-3 py-2 rounded transition-colors ${
+                      isActive
+                        ? "bg-slate-800 text-white font-medium"
+                        : "text-slate-400 hover:bg-slate-800/80 hover:text-slate-100"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </nav>
           </aside>
           <main className="flex-1 p-4 md:p-6">

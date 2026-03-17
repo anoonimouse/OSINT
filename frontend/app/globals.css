@@ -7,5 +7,42 @@
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     sans-serif;
+  @apply bg-slate-950 text-slate-200;
 }
 
+/* Pulsar Animation for High-Risk Incidents */
+@keyframes pulsar {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.pulsar-marker {
+  @apply rounded-full bg-red-500 border-2 border-white;
+  animation: pulsar 2s infinite;
+}
+
+.pulsar-marker-moderate {
+  @apply rounded-full bg-amber-500 border-2 border-white;
+}
+
+.pulsar-marker-low {
+  @apply rounded-full bg-emerald-500 border-2 border-white;
+}
+
+/* Dark Mode Map Adjustment */
+.leaflet-container {
+    background: #020617 !important;
+}
+.leaflet-tile {
+    filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+}

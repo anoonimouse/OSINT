@@ -14,6 +14,31 @@ L.Icon.Default.mergeOptions({
   iconUrl: markerIcon.src ?? markerIcon,
   shadowUrl: markerShadow.src ?? markerShadow,
 });
+
+const highIcon = new L.DivIcon({
+  className: "pulsar-marker",
+  iconSize: [12, 12],
+  iconAnchor: [6, 6],
+});
+
+const moderateIcon = new L.DivIcon({
+  className: "pulsar-marker-moderate",
+  iconSize: [10, 10],
+  iconAnchor: [5, 5],
+});
+
+const lowIcon = new L.DivIcon({
+  className: "pulsar-marker-low",
+  iconSize: [8, 8],
+  iconAnchor: [4, 4],
+});
+
+const getMarkerIcon = (score: number) => {
+  if (score >= 8) return highIcon;
+  if (score >= 5) return moderateIcon;
+  return lowIcon;
+};
+
 import useSWR from "swr";
 import { fetcher } from "../../lib/api";
 
@@ -57,6 +82,7 @@ export default function IncidentMap() {
               <Marker
                 key={incident.id}
                 position={[incident.latitude, incident.longitude]}
+                icon={getMarkerIcon(incident.threat_score)}
               >
                 <Popup>
                   <div className="space-y-1">
